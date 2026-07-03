@@ -1,0 +1,32 @@
+; VizKit Data File: Network
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+IP Configuration (Full)~Shows detailed IP configuration for all adapters~ipconfig /all~N~N
+IP Configuration (Basic)~Shows a quick summary of IP addresses~ipconfig~N~N
+Release IP Address~Releases the current DHCP lease~ipconfig /release~Y~Y
+Renew IP Address~Requests a new DHCP lease~ipconfig /renew~Y~Y
+Flush DNS Cache~Clears the local DNS resolver cache~ipconfig /flushdns~Y~Y
+Display DNS Cache~Shows currently cached DNS entries~ipconfig /displaydns~N~N
+Routing Table~Shows the IPv4 routing table~route print~N~N
+ARP Cache~Shows the ARP (address resolution) cache~arp -a~N~N
+Network Adapters~Lists all network adapters and their status~powershell -NoProfile -Command "Get-NetAdapter | Format-Table Name,InterfaceDescription,Status,LinkSpeed -AutoSize"~N~N
+Adapter Statistics~Shows per-adapter send and receive statistics~netstat -e~N~N
+Wi-Fi Profiles~Lists all saved Wi-Fi network profiles~netsh wlan show profiles~N~N
+Wi-Fi Current Connection~Shows details of the active Wi-Fi connection~netsh wlan show interfaces~N~N
+Wi-Fi Diagnostics Report~Generates a detailed wireless diagnostics HTML report~netsh wlan show wlanreport~N~Y
+TCP/UDP Connections~Lists active TCP and UDP connections and listening ports~netstat -ano~N~N
+Listening Ports Only~Shows only ports currently in a listening state~netstat -an -p TCP~N~N
+Firewall Status~Shows the status of all firewall profiles~netsh advfirewall show allprofiles~N~N
+Firewall Rules (Inbound)~Lists all inbound firewall rules~netsh advfirewall firewall show rule name=all dir=in~N~N
+Proxy Settings~Shows the current proxy configuration~netsh winhttp show proxy~N~N
+Reset Proxy~Resets WinHTTP proxy settings to direct access~netsh winhttp reset proxy~Y~Y
+Winsock Reset~Resets the Winsock catalog (fixes many connectivity issues)~netsh winsock reset~Y~Y
+Reset TCP/IP Stack~Resets the TCP/IP stack to default settings~netsh int ip reset~Y~Y
+Ping Gateway~Pings the default gateway to test local connectivity~powershell -NoProfile -Command "$gw = (Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Select-Object -First 1 -ExpandProperty NextHop); ping $gw"~N~N
+Ping Public DNS~Pings a well-known public DNS server (8.8.8.8)~ping 8.8.8.8~N~N
+Traceroute to Host~Traces the network path to a host (edit target in the window)~tracert 8.8.8.8~N~N
+DNS Lookup~Resolves a hostname using nslookup (edit target in the window)~nslookup example.com~N~N
+Disable Network Adapter~Disables an adapter you choose by name~powershell -NoProfile -Command "Get-NetAdapter | Format-Table Name,Status -AutoSize; $n=Read-Host 'Adapter name to disable'; Disable-NetAdapter -Name $n -Confirm:$false"~Y~Y
+Enable Network Adapter~Enables an adapter you choose by name~powershell -NoProfile -Command "Get-NetAdapter | Format-Table Name,Status -AutoSize; $n=Read-Host 'Adapter name to enable'; Enable-NetAdapter -Name $n -Confirm:$false"~Y~Y
+Public IP Address~Shows your public-facing IP address (requires internet)~powershell -NoProfile -Command "(Invoke-RestMethod -Uri 'https://api.ipify.org?format=json').ip"~N~N
+Hosts File Contents~Shows the contents of the local hosts file~type %WINDIR%\System32\drivers\etc\hosts~N~N
+Network Profile Type~Shows whether each network is Public or Private~powershell -NoProfile -Command "Get-NetConnectionProfile | Format-Table Name,NetworkCategory,IPv4Connectivity -AutoSize"~N~N

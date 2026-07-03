@@ -1,0 +1,30 @@
+; VizKit Data File: Windows Security
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+Open Windows Security~Opens the Windows Security app~start windowsdefender:~N~N
+Defender Status~Shows Windows Defender real-time protection status~powershell -NoProfile -Command "Get-MpComputerStatus | Format-List AntivirusEnabled,RealTimeProtectionEnabled,AntivirusSignatureLastUpdated,QuickScanAge"~N~N
+Defender Quick Scan~Runs a Windows Defender quick scan~powershell -NoProfile -Command "Start-MpScan -ScanType QuickScan"~Y~Y
+Defender Full Scan~Runs a full Windows Defender antivirus scan~powershell -NoProfile -Command "Start-MpScan -ScanType FullScan"~Y~Y
+Defender Update Definitions~Downloads the latest Defender virus definitions~powershell -NoProfile -Command "Update-MpSignature"~Y~Y
+Defender Threat History~Shows recently detected threats~powershell -NoProfile -Command "Get-MpThreat | Format-Table ThreatName,SeverityID,ActionSuccess -AutoSize"~N~N
+List Defender Exclusions~Shows current Defender exclusion paths and processes~powershell -NoProfile -Command "Get-MpPreference | Select-Object ExclusionPath,ExclusionProcess,ExclusionExtension"~N~Y
+Firewall Overview~Shows the status of Domain, Private and Public firewall profiles~netsh advfirewall show allprofiles state~N~N
+Enable Firewall (All Profiles)~Turns the Windows Firewall on for all profiles~netsh advfirewall set allprofiles state on~Y~Y
+Disable Firewall (All Profiles)~Turns the Windows Firewall off for all profiles~netsh advfirewall set allprofiles state off~Y~Y
+Firewall Blocked Connections Log~Shows recent entries from the firewall log file, if logging is enabled~powershell -NoProfile -Command "Get-Content -Path ($env:SystemRoot + '\System32\LogFiles\Firewall\pfirewall.log') -Tail 40 -ErrorAction SilentlyContinue"~N~Y
+Credential Manager~Opens the Credential Manager control panel~control /name Microsoft.CredentialManager~N~N
+List Local User Accounts~Shows all local user accounts on this PC~net user~N~N
+Local Account Details~Shows detailed info for a local account you choose~powershell -NoProfile -Command "$u=Read-Host 'Username'; Get-LocalUser -Name $u | Format-List *"~N~Y
+List Local Groups~Shows all local security groups~net localgroup~N~N
+Local Administrators~Lists members of the local Administrators group~net localgroup administrators~N~N
+Create Local User~Creates a new local user account~powershell -NoProfile -Command "$u=Read-Host 'New username'; $p=Read-Host 'Password' -AsSecureString; New-LocalUser -Name $u -Password $p"~Y~Y
+Disable Local User~Disables a local user account you choose~powershell -NoProfile -Command "$u=Read-Host 'Username to disable'; Disable-LocalUser -Name $u"~Y~Y
+Enable Local User~Re-enables a disabled local user account~powershell -NoProfile -Command "$u=Read-Host 'Username to enable'; Enable-LocalUser -Name $u"~Y~Y
+UAC Settings~Opens the User Account Control settings dialog~UserAccountControlSettings.exe~N~N
+Secure Boot Status~Shows whether Secure Boot is enabled on this device~powershell -NoProfile -Command "Confirm-SecureBootUEFI"~N~Y
+TPM Status~Shows the presence and status of the Trusted Platform Module~powershell -NoProfile -Command "Get-Tpm"~N~N
+Windows Hello Settings~Opens Windows Hello sign-in options~start ms-settings:signinoptions~N~N
+BitLocker Management Console~Opens the BitLocker Drive Encryption control panel~control /name Microsoft.BitLockerDriveEncryption~N~N
+Local Security Policy~Opens the Local Security Policy console~secpol.msc~N~Y
+Group Policy Editor~Opens the Local Group Policy Editor~gpedit.msc~N~Y
+Audit Policy Settings~Shows current audit policy configuration~auditpol /get /category:*~N~Y
+Security Health Summary~Runs a general Defender-based security health summary~powershell -NoProfile -Command "Get-MpComputerStatus | Select-Object AntivirusEnabled,RealTimeProtectionEnabled,BehaviorMonitorEnabled,IoavProtectionEnabled,OnAccessProtectionEnabled"~N~N

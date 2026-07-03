@@ -1,0 +1,12 @@
+; VizKit Data File: Reports
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+System Info Report~Saves a full systeminfo report to a text file~systeminfo > "%VIZKIT_REPORTS%\SystemInfo_%VIZKIT_STAMP%.txt"~N~N
+Network Configuration Report~Saves full IP configuration to a text file~ipconfig /all > "%VIZKIT_REPORTS%\NetworkConfig_%VIZKIT_STAMP%.txt"~N~N
+Running Processes Report~Saves the current process list to a text file~tasklist /v > "%VIZKIT_REPORTS%\Processes_%VIZKIT_STAMP%.txt"~N~N
+Driver Inventory Report~Saves the full driver inventory to a text file~driverquery /v /fo LIST > "%VIZKIT_REPORTS%\Drivers_%VIZKIT_STAMP%.txt"~N~N
+Services Report~Saves the full services list to a text file~powershell -NoProfile -Command "Get-Service | Sort-Object Status,DisplayName | Format-Table Name,DisplayName,Status -AutoSize" > "%VIZKIT_REPORTS%\Services_%VIZKIT_STAMP%.txt"~N~N
+Installed Updates Report~Saves installed Windows Update history to a text file~powershell -NoProfile -Command "Get-HotFix | Sort-Object InstalledOn -Descending" > "%VIZKIT_REPORTS%\Updates_%VIZKIT_STAMP%.txt"~N~N
+Installed Software Report~Saves the list of installed applications to a text file~powershell -NoProfile -Command "Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName,DisplayVersion,Publisher | Where-Object DisplayName" > "%VIZKIT_REPORTS%\Software_%VIZKIT_STAMP%.txt"~N~N
+Disk and Volume Report~Saves disk and volume information to a text file~powershell -NoProfile -Command "Get-Disk; Get-Volume" > "%VIZKIT_REPORTS%\Disks_%VIZKIT_STAMP%.txt"~N~N
+Battery Health Report~Generates the built-in Windows battery health HTML report~powercfg /batteryreport /output "%VIZKIT_REPORTS%\BatteryReport_%VIZKIT_STAMP%.html"~N~N
+Full VizKit Report Bundle~Runs the system, network, process and driver reports in one go~systeminfo > "%VIZKIT_REPORTS%\SystemInfo_%VIZKIT_STAMP%.txt" & ipconfig /all > "%VIZKIT_REPORTS%\NetworkConfig_%VIZKIT_STAMP%.txt" & tasklist /v > "%VIZKIT_REPORTS%\Processes_%VIZKIT_STAMP%.txt" & driverquery /v /fo LIST > "%VIZKIT_REPORTS%\Drivers_%VIZKIT_STAMP%.txt"~N~N

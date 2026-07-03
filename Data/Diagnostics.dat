@@ -1,0 +1,31 @@
+; VizKit Data File: Diagnostics
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+Running Processes~Lists all currently running processes~tasklist~N~N
+Running Processes (Detailed)~Lists processes with memory usage and window titles~tasklist /v~N~N
+Top Memory-Consuming Processes~Shows the top 15 processes by memory usage~powershell -NoProfile -Command "Get-Process | Sort-Object WS -Descending | Select-Object -First 15 Name,Id,@{n='MemMB';e={[math]::Round($_.WS/1MB,1)}}"~N~N
+Top CPU-Consuming Processes~Shows the top 15 processes by CPU time~powershell -NoProfile -Command "Get-Process | Sort-Object CPU -Descending | Select-Object -First 15 Name,Id,CPU"~N~N
+Kill a Process by Name~Terminates a process you specify by name~powershell -NoProfile -Command "$n=Read-Host 'Process name (no .exe)'; Stop-Process -Name $n -Force"~Y~N
+Services Inventory~Lists all Windows services and their status~powershell -NoProfile -Command "Get-Service | Sort-Object Status,DisplayName | Format-Table Name,DisplayName,Status -AutoSize"~N~N
+Running Services Only~Lists only currently running services~powershell -NoProfile -Command "Get-Service | Where-Object Status -eq 'Running' | Format-Table Name,DisplayName -AutoSize"~N~N
+Stopped Automatic Services~Flags Automatic-start services that are not currently running~powershell -NoProfile -Command "Get-Service | Where-Object {$_.StartType -eq 'Automatic' -and $_.Status -ne 'Running'} | Format-Table Name,DisplayName,Status -AutoSize"~N~N
+Startup Items~Lists programs configured to launch at sign-in~powershell -NoProfile -Command "Get-CimInstance Win32_StartupCommand | Format-Table Name,Command,Location,User -AutoSize"~N~N
+Scheduled Tasks (Active)~Lists all enabled scheduled tasks~powershell -NoProfile -Command "Get-ScheduledTask | Where-Object State -ne 'Disabled' | Format-Table TaskName,State,TaskPath -AutoSize"~N~N
+Scheduled Tasks (All)~Lists every scheduled task including disabled ones~schtasks /query /fo LIST~N~N
+Driver Inventory~Lists all installed device drivers~driverquery~N~N
+Driver Inventory (Verbose)~Lists installed drivers with signature and version detail~driverquery /v /fo LIST~N~N
+Signed Driver Check~Lists drivers and whether they are digitally signed~driverquery /si~N~N
+Installed Software List~Lists installed applications from the registry~powershell -NoProfile -Command "Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName,DisplayVersion,Publisher | Where-Object DisplayName | Sort-Object DisplayName"~N~N
+Installed Windows Updates~Lists installed Windows update (KB) history~powershell -NoProfile -Command "Get-HotFix | Sort-Object InstalledOn -Descending | Format-Table HotFixID,Description,InstalledOn -AutoSize"~N~N
+Quick Fix Engineering Detail~Shows detailed Windows quick-fix (patch) history~powershell -NoProfile -Command "Get-CimInstance -ClassName Win32_QuickFixEngineering | Format-Table"~N~N
+Check for Windows Updates~Checks Windows Update for available updates without installing~UsoClient StartScan~N~Y
+System File Checker (SFC)~Scans and repairs protected system files~sfc /scannow~Y~Y
+Event Log - System Errors~Shows the most recent System log error events~powershell -NoProfile -Command "Get-WinEvent -LogName System -MaxEvents 200 | Where-Object LevelDisplayName -eq 'Error' | Select-Object -First 25 TimeCreated,Id,ProviderName,Message | Format-List"~N~N
+Event Log - Application Errors~Shows the most recent Application log error events~powershell -NoProfile -Command "Get-WinEvent -LogName Application -MaxEvents 200 | Where-Object LevelDisplayName -eq 'Error' | Select-Object -First 25 TimeCreated,Id,ProviderName,Message | Format-List"~N~N
+Export System Event Log~Exports the full System event log to a file in Reports~wevtutil epl System "%VIZKIT_REPORTS%\SystemEventLog.evtx"~N~Y
+Export Application Event Log~Exports the full Application event log to a file in Reports~wevtutil epl Application "%VIZKIT_REPORTS%\ApplicationEventLog.evtx"~N~Y
+Blue Screen (Crash) History~Lists recent minidump crash files if present~powershell -NoProfile -Command "Get-ChildItem -Path ($env:SystemRoot + '\Minidump') -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending"~N~N
+Reliability History~Opens the graphical Reliability Monitor~perfmon /rel~N~N
+Resource Monitor~Opens the graphical Resource Monitor~resmon~N~N
+Performance Monitor~Opens the graphical Performance Monitor~perfmon~N~N
+Network Snapshot~Captures a combined snapshot of IP config, routes and connections~ipconfig /all & echo. & route print & echo. & netstat -ano~N~N
+Full Diagnostic Summary~Runs systeminfo, tasklist and driverquery back-to-back~systeminfo & echo. & tasklist & echo. & driverquery~N~N

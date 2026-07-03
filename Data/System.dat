@@ -1,0 +1,35 @@
+; VizKit Data File: System
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+Full System Summary~Detailed OS, hardware and network summary~systeminfo~N~N
+Windows Version~Shows the Windows edition and version~ver~N~N
+Detailed Build Info~Shows registry-based build, edition and display version~powershell -NoProfile -Command "Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' | Select-Object ProductName, DisplayVersion, CurrentBuild, UBR"~N~N
+System Uptime~Shows how long Windows has been running since last boot~powershell -NoProfile -Command "(Get-Date) - (Get-CimInstance Win32_OperatingSystem).LastBootUpTime"~N~N
+Last Boot Time~Shows the exact last boot timestamp~powershell -NoProfile -Command "(Get-CimInstance Win32_OperatingSystem).LastBootUpTime"~N~N
+BIOS Information~Shows BIOS vendor, version and release date~powershell -NoProfile -Command "Get-CimInstance Win32_BIOS | Format-List Manufacturer,SMBIOSBIOSVersion,ReleaseDate,SerialNumber"~N~N
+Motherboard Information~Shows motherboard manufacturer and model~powershell -NoProfile -Command "Get-CimInstance Win32_BaseBoard | Format-List Manufacturer,Product,SerialNumber,Version"~N~N
+CPU Information~Shows processor name, core count and clock speed~powershell -NoProfile -Command "Get-CimInstance Win32_Processor | Format-List Name,NumberOfCores,NumberOfLogicalProcessors,MaxClockSpeed"~N~N
+CPU Load Snapshot~Shows current CPU utilization percentage~powershell -NoProfile -Command "Get-CimInstance Win32_Processor | Select-Object LoadPercentage"~N~N
+RAM Summary~Shows total, used and free physical memory~powershell -NoProfile -Command "Get-CimInstance Win32_OperatingSystem | Select-Object @{n='TotalGB';e={[math]::Round($_.TotalVisibleMemorySize/1MB,2)}}, @{n='FreeGB';e={[math]::Round($_.FreePhysicalMemory/1MB,2)}}"~N~N
+RAM Module Details~Lists each installed memory stick with capacity and speed~powershell -NoProfile -Command "Get-CimInstance Win32_PhysicalMemory | Format-Table Manufacturer,Capacity,Speed,DeviceLocator -AutoSize"~N~N
+GPU Information~Lists installed graphics adapters and driver versions~powershell -NoProfile -Command "Get-CimInstance Win32_VideoController | Format-List Name,DriverVersion,AdapterRAM"~N~N
+Disk Drives~Lists physical disks, model and size~powershell -NoProfile -Command "Get-CimInstance Win32_DiskDrive | Format-Table Model,Size,InterfaceType,Status -AutoSize"~N~N
+Logical Drive Space~Shows drive letters with free and used space~powershell -NoProfile -Command "Get-PSDrive -PSProvider FileSystem | Select-Object Name,@{n='UsedGB';e={[math]::Round($_.Used/1GB,2)}},@{n='FreeGB';e={[math]::Round($_.Free/1GB,2)}}"~N~N
+Battery Status~Shows battery presence, charge level and status (laptops)~powershell -NoProfile -Command "Get-CimInstance Win32_Battery | Format-List Name,EstimatedChargeRemaining,BatteryStatus"~N~N
+Battery Health Report~Generates a detailed HTML battery health report~powercfg /batteryreport /output "%VIZKIT_REPORTS%\BatteryReport.html"~N~N
+Active Power Plan~Shows the currently active power plan~powercfg /getactivescheme~N~N
+List Power Plans~Lists all available power plans~powercfg /list~N~N
+Boot Configuration~Shows the boot configuration data store~bcdedit /enum~N~Y
+Environment Variables~Lists all current environment variables~set~N~N
+PATH Variable~Shows the current PATH variable only~echo %PATH%~N~N
+Computer Name~Shows this computer's hostname~hostname~N~N
+Logged-in User~Shows the current username, domain and group memberships~whoami /all~N~N
+Installed .NET Versions~Lists installed .NET Framework versions~powershell -NoProfile -Command "Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse | Get-ItemProperty -Name Version -ErrorAction SilentlyContinue | Select-Object PSChildName,Version"~N~N
+System Locale and Timezone~Shows the current system locale and timezone~powershell -NoProfile -Command "Get-WinSystemLocale; Get-TimeZone"~N~N
+Memory Slots Used~Shows how many physical memory slots are populated~powershell -NoProfile -Command "Get-CimInstance Win32_PhysicalMemoryArray | Select-Object MemoryDevices; Get-CimInstance Win32_PhysicalMemory | Measure-Object | Select-Object Count"~N~N
+Digital Product Key~Shows the Windows product key stored in firmware~powershell -NoProfile -Command "(Get-CimInstance -Query 'select * from SoftwareLicensingService').OA3xOriginalProductKey"~N~Y
+Windows Activation Status~Shows whether Windows is activated and the license type~cscript //nologo %WINDIR%\System32\slmgr.vbs /xpr~N~N
+Hardware Model Summary~Shows manufacturer, model and system SKU for this PC~powershell -NoProfile -Command "Get-CimInstance Win32_ComputerSystem | Format-List Manufacturer,Model,SystemFamily,SystemSKUNumber"~N~N
+Installed Fonts Count~Shows how many fonts are installed on this system~powershell -NoProfile -Command "(Get-ChildItem -Path ($env:SystemRoot + '\Fonts')).Count"~N~N
+System Restart~Restarts the computer in 10 seconds~shutdown /r /t 10~Y~Y
+System Shutdown~Shuts the computer down in 10 seconds~shutdown /s /t 10~Y~Y
+Sign Out Current User~Logs off the current Windows session immediately~shutdown /l~Y~N

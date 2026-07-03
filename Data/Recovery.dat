@@ -1,0 +1,23 @@
+; VizKit Data File: Recovery
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+Open System Restore~Opens the System Restore wizard~rstrui.exe~N~N
+List Restore Points~Lists all available System Restore points~powershell -NoProfile -Command "Get-ComputerRestorePoint | Format-Table SequenceNumber,Description,CreationTime -AutoSize"~N~Y
+Create Restore Point~Creates a new System Restore point now~powershell -NoProfile -Command "Checkpoint-Computer -Description 'VizKit Manual Restore Point' -RestorePointType MODIFY_SETTINGS"~Y~Y
+Recovery Settings (Settings App)~Opens the Windows Recovery options page~start ms-settings:recovery~N~N
+Advanced Startup (Restart Now)~Restarts directly into Advanced Startup Options~shutdown /r /o /t 10~Y~Y
+Windows Memory Diagnostic~Opens the built-in memory diagnostic tool (schedules a restart)~mdsched.exe~Y~N
+System File Checker (SFC Scan)~Scans and repairs protected system files~sfc /scannow~Y~Y
+SFC Verify Only~Verifies system file integrity without repairing anything~sfc /verifyonly~N~Y
+DISM Check Health~Quickly checks if the component store is flagged as corrupted~DISM /Online /Cleanup-Image /CheckHealth~N~Y
+DISM Scan Health~Thoroughly scans the component store for corruption~DISM /Online /Cleanup-Image /ScanHealth~N~Y
+DISM Restore Health~Repairs the component store using Windows Update as a source~DISM /Online /Cleanup-Image /RestoreHealth~Y~Y
+CHKDSK Help~Shows CHKDSK usage and available switches~chkdsk /?~N~N
+Reset This PC~Opens the interactive Reset This PC wizard (you confirm every step)~systemreset.exe~Y~Y
+Startup Repair (via Advanced Startup)~Restarts into Advanced Startup so you can choose Startup Repair~shutdown /r /o /t 10~Y~Y
+Backup and Restore (Windows 7)~Opens the legacy Backup and Restore control panel~control /name Microsoft.BackupAndRestore~N~N
+File History Settings~Opens File History backup settings~control /name Microsoft.FileHistory~N~N
+Create System Image Backup~Opens the System Image Backup wizard~sdclt.exe /GOTOWIZARD~N~N
+Recovery Drive Wizard~Opens the tool to create a USB recovery drive~recoverydrive.exe~N~Y
+Safe Mode Boot (Next Restart)~Configures Windows to boot into Safe Mode on the next restart~bcdedit /set {current} safeboot minimal~Y~Y
+Undo Safe Mode Boot~Removes the Safe Mode boot flag set by VizKit~bcdedit /deletevalue {current} safeboot~Y~Y
+Boot Configuration Data~Shows the current boot configuration store~bcdedit /enum~N~Y

@@ -1,0 +1,27 @@
+; VizKit Data File: Storage
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+List All Disks~Shows physical disks with size and partition style~powershell -NoProfile -Command "Get-Disk | Format-Table Number,FriendlyName,Size,PartitionStyle,OperationalStatus -AutoSize"~N~N
+List All Volumes~Shows all volumes with drive letters, labels and file systems~powershell -NoProfile -Command "Get-Volume | Format-Table DriveLetter,FileSystemLabel,FileSystem,SizeRemaining,Size -AutoSize"~N~N
+Disk Management Console~Opens the graphical Disk Management snap-in~diskmgmt.msc~N~Y
+Diskpart Interactive~Opens the diskpart command-line utility~diskpart~Y~Y
+CHKDSK (Read-Only Report)~Scans drive C for errors without making changes~chkdsk C:~N~N
+CHKDSK (Fix Errors)~Schedules CHKDSK with automatic error fixing on next reboot~chkdsk C: /f~Y~Y
+CHKDSK (Fix + Bad Sectors)~Full CHKDSK scan with bad sector recovery on next reboot~chkdsk C: /r~Y~Y
+Drive Health (Basic)~Shows basic health status per physical disk~powershell -NoProfile -Command "Get-PhysicalDisk | Format-Table FriendlyName,MediaType,HealthStatus,OperationalStatus -AutoSize"~N~N
+Detailed Reliability Data~Shows temperature and reliability counters where supported~powershell -NoProfile -Command "Get-StorageReliabilityCounter -PhysicalDisk (Get-PhysicalDisk) | Format-List"~N~N
+Disk Fragmentation Analysis~Analyzes fragmentation level of drive C without changing it~defrag C: /A~N~Y
+Optimize / Defragment Drive~Runs Windows' standard drive optimization on drive C~defrag C: /O~Y~Y
+Mounted Volumes~Lists all mounted volume GUIDs and their mount points~mountvol~N~N
+BitLocker Status~Shows BitLocker encryption status for all volumes~manage-bde -status~N~Y
+Disk Cleanup (Interactive)~Opens the built-in Disk Cleanup utility~cleanmgr~N~N
+Storage Sense Settings~Opens Storage Sense settings in the Settings app~start ms-settings:storagesense~N~N
+Recycle Bin Size~Estimates how much space the Recycle Bin is using~powershell -NoProfile -Command "$sh = New-Object -ComObject Shell.Application; $rb = $sh.Namespace(10); ($rb.Items() | Measure-Object -Property Size -Sum).Sum"~N~N
+Empty Recycle Bin~Permanently deletes all items in the Recycle Bin~powershell -NoProfile -Command "Clear-RecycleBin -Force"~Y~N
+Temp Folder Size~Shows how much space the user Temp folder is using~powershell -NoProfile -Command "(Get-ChildItem $env:TEMP -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1MB"~N~N
+Clear User Temp Files~Deletes files in the current user's Temp folder~powershell -NoProfile -Command "Remove-Item -Path ($env:TEMP + '\*') -Recurse -Force -ErrorAction SilentlyContinue"~Y~N
+Windows Update Cleanup~Runs Disk Cleanup targeted at Windows Update leftovers~cleanmgr /sagerun:1~Y~Y
+Volume Shadow Copies~Lists existing System Restore shadow copies~vssadmin list shadows~N~Y
+Shadow Storage Usage~Shows how much disk space is reserved for Shadow Copies~vssadmin list shadowstorage~N~Y
+List Partitions~Shows partition layout for all disks~powershell -NoProfile -Command "Get-Partition | Format-Table DiskNumber,PartitionNumber,DriveLetter,Size,Type -AutoSize"~N~N
+Eject Removable Drive~Safely ejects a removable USB drive you choose~powershell -NoProfile -Command "$d=Read-Host 'Drive letter to eject (e.g. E)'; (New-Object -ComObject Shell.Application).Namespace(17).ParseName($d+':').InvokeVerb('Eject')"~Y~N
+Format a Drive (Interactive)~Opens the graphical Format dialog for a chosen drive~rundll32.exe shell32.dll,SHFormatDrive~Y~Y

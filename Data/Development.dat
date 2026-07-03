@@ -1,0 +1,26 @@
+; VizKit Data File: Development
+; Format: Name~Description~Command~Confirm(Y/N)~AdminRequired(Y/N)
+Open Command Prompt~Opens a new Command Prompt window~start cmd.exe~N~N
+Open Command Prompt (Admin)~Opens an elevated Command Prompt window~powershell -NoProfile -Command "Start-Process cmd.exe -Verb RunAs"~Y~N
+Open PowerShell~Opens a new Windows PowerShell window~start powershell.exe~N~N
+Open PowerShell (Admin)~Opens an elevated PowerShell window~powershell -NoProfile -Command "Start-Process powershell.exe -Verb RunAs"~Y~N
+Open Windows Terminal~Opens Windows Terminal if installed~start wt.exe~N~N
+Open Windows Terminal (Admin)~Opens an elevated Windows Terminal session~powershell -NoProfile -Command "Start-Process wt.exe -Verb RunAs"~Y~N
+PowerShell Version Info~Shows the installed PowerShell version and edition~powershell -NoProfile -Command "$PSVersionTable"~N~N
+List Environment Variables~Lists all current environment variables~set~N~N
+Edit User Environment Variables~Opens the graphical environment variables editor~rundll32 sysdm.cpl,EditEnvironmentVariables~N~N
+Registry Editor~Opens the Windows Registry Editor~regedit~Y~Y
+Export Registry Hive (HKCU)~Backs up the current user registry hive to a .reg file~reg export HKCU "%VIZKIT_REPORTS%\HKCU_Backup.reg"~N~N
+Event Viewer~Opens the Windows Event Viewer console~eventvwr.msc~N~N
+Device Manager~Opens Device Manager~devmgmt.msc~N~N
+Computer Management~Opens the Computer Management console~compmgmt.msc~N~N
+Task Scheduler~Opens the Task Scheduler console~taskschd.msc~N~N
+Services Console~Opens the Services management console~services.msc~N~N
+Group Policy Editor~Opens the Local Group Policy Editor~gpedit.msc~N~Y
+System Configuration~Opens the System Configuration (msconfig) utility~msconfig~N~N
+.NET SDK Version~Shows the installed .NET SDK version if present~dotnet --version~N~N
+Node.js Version~Shows the installed Node.js version if present~node --version~N~N
+Python Version~Shows the installed Python version if present~python --version~N~N
+Git Version~Shows the installed Git version if present~git --version~N~N
+List Installed IDEs / Editors~Checks PATH for common editors (VS Code, Sublime, Notepad++)~where code & where subl & where notepad++~N~N
+Open Windows Terminal Settings Folder~Opens the folder containing Windows Terminal's settings.json~start "" "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"~N~N
